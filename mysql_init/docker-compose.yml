@@ -1,0 +1,27 @@
+version: '3'
+services:
+  mysql:
+    image: mariadb:10.3.22-bionic
+    container_name: hello_compose_mysql
+    restart: always
+    networks:
+      - mysql-net
+    ports:
+      - 3306:3306
+    environment:
+      TZ: Asia/Shanghai
+      MYSQL_ROOT_PASSWORD: dev123456
+  mysql-init:
+    image: mariadb:10.3.22-bionic
+    command: /init-db.sh
+    networks:
+      - mysql-net
+    volumes:
+      - ./sql/:/sql/
+      - ./init-db.sh:/init-db.sh
+    environment:
+      MYSQL_ROOT_PASSWORD: dev123456
+
+networks:
+  mysql-net:
+    external: false
